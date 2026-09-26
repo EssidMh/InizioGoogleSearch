@@ -1,0 +1,6 @@
+@InizioGoogleSearch_HostAddress = http://localhost:5149
+
+GET {{InizioGoogleSearch_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

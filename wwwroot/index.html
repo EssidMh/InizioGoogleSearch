@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Search</title>
+</head>
+
+<body>
+
+    <h1>Google Search</h1>
+
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="Enter your search phrase"
+    >
+
+    <button id="searchButton">Search</button>
+
+    <div id="results"></div>
+
+    <script>
+        const searchInput = document.getElementById("searchInput");
+        const searchButton = document.getElementById("searchButton");
+        const results = document.getElementById("results");
+
+        searchButton.addEventListener("click", async () => {
+
+            const query = searchInput.value.trim();
+
+            if (!query) {
+                return;
+            }
+
+            results.innerHTML = "Searching...";
+
+            try {
+                const response = await fetch(
+                    `/api/search?q=${encodeURIComponent(query)}`
+                );
+
+                const data = await response.json();
+
+                results.innerHTML = "";
+
+                data.forEach(result => {
+
+                    const resultElement = document.createElement("div");
+
+                    resultElement.innerHTML = `
+                        <h3>${result.position}. ${result.title}</h3>
+
+                        <a href="${result.link}" target="_blank">
+                            ${result.link}
+                        </a>
+
+                        <p>${result.snippet}</p>
+
+                        <hr>
+                    `;
+
+                    results.appendChild(resultElement);
+                });
+
+            } catch (error) {
+                console.error(error);
+                results.innerHTML = "An error occurred.";
+            }
+        });
+    </script>
+
+</body>
+</html>
