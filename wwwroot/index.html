@@ -18,12 +18,17 @@
 
     <button id="searchButton">Search</button>
 
+    <button id="downloadButton">Download JSON</button>
+
     <div id="results"></div>
 
     <script>
         const searchInput = document.getElementById("searchInput");
         const searchButton = document.getElementById("searchButton");
+        const downloadButton = document.getElementById("downloadButton");
         const results = document.getElementById("results");
+
+        let searchResults = [];
 
         searchButton.addEventListener("click", async () => {
 
@@ -41,6 +46,8 @@
                 );
 
                 const data = await response.json();
+
+                searchResults = data;
 
                 results.innerHTML = "";
 
@@ -67,6 +74,25 @@
                 console.error(error);
                 results.innerHTML = "An error occurred.";
             }
+        });
+
+        downloadButton.addEventListener("click", () => {
+
+            const json = JSON.stringify(searchResults, null, 2);
+
+            const blob = new Blob([json], {
+                type: "application/json"
+            });
+
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "results.json";
+
+            link.click();
+
+            URL.revokeObjectURL(url);
         });
     </script>
 
